@@ -1,0 +1,11 @@
+- name: Create file in appservers
+  hosts: all
+  become: true
+  tasks:
+    - name: Create the file and set properties
+      file:
+        path: /tmp/appdata.txt
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: "0755"
+        state: touch
