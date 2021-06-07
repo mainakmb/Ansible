@@ -1,0 +1,30 @@
+- name: Play_1
+  hosts: all
+  become: true
+  tasks:
+    - name: copy blog.txt
+      when: inventory_hostname == 'stapp01'                   # ansible_hostname / ansible_nodename
+      copy: 
+        src: /usr/src/finance/blog.txt
+        dest: /opt/finance
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
+        mode: '0744'
+
+    - name: copy story.txt
+      when: inventory_hostname == 'stapp02'
+      copy:
+        src: /usr/src/finance/story.txt
+        dest: /opt/finance
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
+        mode: '0744'
+
+    - name: copy media.txt
+      when: inventory_hostname == 'stapp03'
+      copy:
+        src: /usr/src/finance/media.txt
+        dest: /opt/finance
+        owner: '{{ ansible_user }}'
+        group: '{{ ansible_user }}'
+        mode: '0744'
