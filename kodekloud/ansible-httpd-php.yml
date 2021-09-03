@@ -1,0 +1,35 @@
+- name: Apache and PHP setup playbook
+  hosts: stapp03
+  become: true
+  tasks:
+    - name: Install httpd and php
+      yum: 
+        name: ["httpd", "php"]
+        state: present
+    
+    - name: Change document root
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^DocumentRoot'
+        insertafter: '^#DocumentRoot'
+        line: 'DocumentRoot "/var/www/html/myroot"'
+ 
+    - name: Create the new DocumentRoot directory if it does not exist
+      file:
+        path: /var/www/html/myroot
+        state: directory
+        owner: apache
+        group: apache
+
+    - name: Use Jinja2 template to generate phpinfo.php
+      template:
+        src: "~/playbooks/templates/phpinfo.php.j2"
+        dest: "/var/www/html/myroot/phpinfo.php"
+        owner: apache
+        group: apache
+
+    - name: Start and enable service httpd
+      service:
+        name: httpd
+        state: started
+        enabled: yes
